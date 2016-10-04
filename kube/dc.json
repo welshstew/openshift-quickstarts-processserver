@@ -1,0 +1,161 @@
+{
+    "kind": "DeploymentConfig",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "kie-app",
+        "namespace": "brms",
+        "selfLink": "/oapi/v1/namespaces/brms/deploymentconfigs/kie-app",
+        "uid": "a743a642-8a17-11e6-8f48-5254009f9a8b",
+        "resourceVersion": "4570",
+        "creationTimestamp": "2016-10-04T09:48:07Z",
+        "labels": {
+            "app": "kie-app",
+            "application": "kie-app",
+            "template": "processserver63-basic-s2i",
+            "xpaas": "1.3.3"
+        },
+        "annotations": {
+            "openshift.io/generated-by": "OpenShiftNewApp"
+        }
+    },
+    "spec": {
+        "strategy": {
+            "type": "Recreate",
+            "recreateParams": {
+                "timeoutSeconds": 600
+            },
+            "resources": {}
+        },
+        "triggers": [
+            {
+                "type": "ImageChange",
+                "imageChangeParams": {
+                    "automatic": true,
+                    "containerNames": [
+                        "kie-app"
+                    ],
+                    "from": {
+                        "kind": "ImageStreamTag",
+                        "name": "kie-app:latest"
+                    },
+                    "lastTriggeredImage": "172.30.177.25:5000/brms/kie-app@sha256:336dccd7b05e2c1c0ef9dfa006240b229c8004711120db6e7e2b61228bc68e13"
+                }
+            },
+            {
+                "type": "ConfigChange"
+            }
+        ],
+        "replicas": 1,
+        "test": false,
+        "selector": {
+            "deploymentConfig": "kie-app"
+        },
+        "template": {
+            "metadata": {
+                "name": "kie-app",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "kie-app",
+                    "application": "kie-app",
+                    "deploymentConfig": "kie-app"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftNewApp"
+                }
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "name": "kie-app",
+                        "image": "172.30.177.25:5000/brms/kie-app@sha256:336dccd7b05e2c1c0ef9dfa006240b229c8004711120db6e7e2b61228bc68e13",
+                        "ports": [
+                            {
+                                "name": "jolokia",
+                                "containerPort": 8778,
+                                "protocol": "TCP"
+                            },
+                            {
+                                "name": "http",
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "env": [
+                            {
+                                "name": "KIE_CONTAINER_DEPLOYMENT",
+                                "value": "processserver-library=org.openshift.quickstarts:processserver-library:1.3.0.Final"
+                            },
+                            {
+                                "name": "KIE_SERVER_USER",
+                                "value": "kieserver"
+                            },
+                            {
+                                "name": "KIE_SERVER_PASSWORD",
+                                "value": "pQLCsP5!"
+                            },
+                            {
+                                "name": "HORNETQ_CLUSTER_PASSWORD",
+                                "value": "2OEkaPBq"
+                            },
+                            {
+                                "name": "HORNETQ_QUEUES"
+                            },
+                            {
+                                "name": "HORNETQ_TOPICS"
+                            }
+                        ],
+                        "resources": {},
+                        "livenessProbe": {
+                            "exec": {
+                                "command": [
+                                    "/bin/bash",
+                                    "-c",
+                                    "/opt/eap/bin/livenessProbe.sh"
+                                ]
+                            },
+                            "timeoutSeconds": 1,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "failureThreshold": 3
+                        },
+                        "readinessProbe": {
+                            "exec": {
+                                "command": [
+                                    "/bin/bash",
+                                    "-c",
+                                    "/opt/eap/bin/readinessProbe.sh"
+                                ]
+                            },
+                            "timeoutSeconds": 1,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "failureThreshold": 3
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "imagePullPolicy": "Always"
+                    }
+                ],
+                "restartPolicy": "Always",
+                "terminationGracePeriodSeconds": 60,
+                "dnsPolicy": "ClusterFirst",
+                "securityContext": {}
+            }
+        }
+    },
+    "status": {
+        "latestVersion": 5,
+        "details": {
+            "causes": [
+                {
+                    "type": "ImageChange",
+                    "imageTrigger": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "name": "kie-app:latest"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
